@@ -3,32 +3,37 @@ const app = express();
 const mongoose = require("mongoose");
 const Listing = require("./models/listing");
 
-async function main() {
-  try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/Project");
-    console.log("Connected to MongoDB successfully!");
-  } catch (err) {
+// checks if connection is successfull main is name of function in which connection is being given
+
+main()
+  .then(() => {
+    console.log("connection sucessul");
+  })
+  .catch((err) => {
     console.log(err);
-  }
+  });
+
+//connecting mongoose
+async function main() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
 
 app.get("/", (req, res) => {
   res.send("hi this is projects Root");
 });
 
-app.get("/test", async (req, res) => {
-  try {
-    let sample = new Listing({
-      title: "ashwith test",
-      description: "hope it works",
-    });
-
-    await sample.save(); // Correct method to save data
-    res.send("Sample was saved!");
-  } catch (err) {
-    console.error("Error saving data:", err);
-    res.status(500).send("Error saving data.");
-  }
+// // this is adding an new list to listing module created in listing.js and reuired here
+app.get("/test", (req, res) => {
+  let samplelist = new Listing({
+    title: "ashre",
+    descrition: "i am good",
+    price: 1200,
+    location: "goa",
+    country: "india",
+  });
+  samplelist.save();
+  console.log("data saved and working ");
+  res.send("sucessfull");
 });
 
 app.listen(7070, () => {
