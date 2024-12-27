@@ -68,6 +68,24 @@ app.get("/listings/:id", async (req, res) => {
   res.render("../views/listings/show.ejs", { listing });
 });
 
+//DELETE LISTING WITH HANDLING CASE IF LISTING DOESNT EXIST
+app.delete("/listings/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedListing = await Listing.findByIdAndDelete(id);
+
+    if (!deletedListing) {
+      return res.status(404).send("Listing not found");
+    }
+
+    console.log(`Deleted listing: ${deletedListing}`);
+    res.redirect("/listings"); // Ensure this path exists in your app
+  } catch (error) {
+    console.error("Error deleting listing:", error);
+    res.status(500).send("Server error");
+  }
+});
+
 app.listen(7070, () => {
   console.log("server is listening");
 });
