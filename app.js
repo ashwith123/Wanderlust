@@ -3,10 +3,12 @@ const app = express();
 const mongoose = require("mongoose");
 const Listing = require("./models/listing");
 const path = require("path");
+const methodOverride = require("method-override");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 // checks if connection is successfull main is name of function in which connection is being given
 main()
@@ -45,11 +47,18 @@ app.post("/listings", async (req, res) => {
   res.redirect("/listings");
 });
 
-//UPDATE ROUT
-app.get("/lisitngs/:id/edit", async (req, res) => {
+//EDIT ROUT
+app.get("/listings/:id/edit", async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
-  res.render("../views/listings/show.ejs", { listing });
+  res.render("../views/listings/edit.ejs", { listing });
+});
+
+//UPDATE ROUT
+app.put("/listings/:id", async (req, res) => {
+  let { id } = req.params;
+  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  res.redirect("/listings/${id}");
 });
 
 //show rout
