@@ -1,0 +1,57 @@
+.navbar {
+  height: 5rem;
+  background-color: white;
+}
+
+.compass {
+  color: red;
+  font-size: 2rem;
+}
+
+.nav-link {
+  color: black !important;
+}
+
+/*fotter*/
+.my-info {
+  width: 100%;
+}
+
+.my-info i {
+  font-size: 1.3rem;
+  margin-right: 1rem;
+  text-decoration: none;
+  color: #222222;
+}
+
+.my-info i:hover {
+  color: blue;
+}
+
+.links {
+  width: 100%;
+}
+
+.links a {
+  text-decoration: none !important;
+  color: #222222;
+}
+
+.links a:hover {
+  text-decoration: underline !important;
+  color: blue;
+}
+
+.name {
+  width: 100%;
+}
+
+.footclass {
+  text-align: center;
+  background-color: #ebebeb;
+  display: flex;
+  justify-content: center;
+  color: #222222;
+  flex-wrap: wrap;
+  align-items: center;
+}

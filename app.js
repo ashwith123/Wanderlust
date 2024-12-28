@@ -7,10 +7,11 @@ const methodOverride = require("method-override");
 const ejsmate = require("ejs-mate");
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsmate);
+app.use(express.static(path.join(__dirname, "public")));
 
 // checks if connection is successfull main is name of function in which connection is being given
 main()

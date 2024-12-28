@@ -1,9 +1,6 @@
 <% layout("layouts/boilerplate") %>
 <body>
-  <form method="get" action="/listings/new">
-    <button>Create new listing</button>
-  </form>
-  <h1>WANDER LUST</h1>
+  <h1>BOOKmyhotel</h1>
   <% for(let listing of allLisitngs){%>
   <li>
     <a href="/listings/<%= listing._id %>"><%= listing.title %></a>
