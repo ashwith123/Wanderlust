@@ -1,22 +1,72 @@
 <% layout("layouts/boilerplate") %>
-
 <body>
-  <form method="post" action="/listings">
-    <input name="listing[title]" placeholder="enter title" type="text" />
+  <div class="col-7 offset-2">
     <br />
-    <textarea
-      name="listing[description]"
-      placeholder="enter description"
-    ></textarea>
     <br />
-    <input name="listing[image]" placeholder="enter image URL" type="text" />
-    <br />
-    <input name="listing[price]" placeholder="enter price" type="number" />
-    <br />
-    <input name="listing[country]" placeholder="enter country" type="text" />
-    <br />
-    <input name="listing[location" placeholder="enter location" type="text" />
-    <br />
-    <button>ADD</button>
-  </form>
+
+    <h1>Create New listing</h1>
+    <form method="post" action="/listings">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input
+          name="listing[title]"
+          class="form-control"
+          placeholder="Add Title"
+          id="title"
+        />
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          class="form-control"
+          name="listing[description]"
+          placeholder="enter description"
+          id="description"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="imgurl">Image URL</label>
+        <input
+          class="form-control"
+          name="listing[image]"
+          placeholder="enter image url"
+          id="imgurl"
+        />
+      </div>
+      <div class="row">
+        <div class="form-group col-4">
+          <label for="price">Price</label>
+          <input
+            name="listing[price]"
+            placeholder=" india"
+            class="form-control"
+            id="price"
+          />
+        </div>
+        <div class="form-group col-8">
+          <label for="country">Enter country name</label>
+          <input
+            name="listing[country]"
+            class="form-control"
+            placeholder="enter location"
+            id="country"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="location">Enter location</label>
+        <input
+          class="form-control"
+          name="listing[location]"
+          placeholder="enter title"
+          id="location"
+        />
+      </div>
+      <br />
+
+      <button class="btn btn-dark" style="background-color: red; border: none">
+        submit
+      </button>
+    </form>
+  </div>
 </body>

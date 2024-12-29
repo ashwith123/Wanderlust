@@ -1,7 +1,10 @@
 <% layout("layouts/boilerplate") %>
 
 <body>
-  <h1>EDIT YOUE LISTINGS</h1>
+  <br />
+  <br />
+
+  <h1>Edit your listing</h1>
   <form method="post" action="/listings/<%=listing._id %>?_method=PUT">
     <input name="listing[title]" value="<%=listing.title%>" type="text" />
     <br />

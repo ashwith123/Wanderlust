@@ -55,3 +55,37 @@
   flex-wrap: wrap;
   align-items: center;
 }
+
+/*image styling*/
+
+a {
+  text-decoration: none !important;
+}
+
+.card {
+  border: none !important;
+  margin-bottom: 2rem;
+}
+
+.card-img-top {
+  border-radius: 1rem !important;
+  height: 20rem !important;
+  object-fit: cover !important;
+}
+
+.card-body {
+  padding: 0% !important;
+}
+
+* {
+  font-weight: 400;
+}
+
+.anchor-style {
+  text-decoration: none !important;
+  color: #222222 !important;
+}
+
+.card:hover {
+  opacity: 0.7;
+}
