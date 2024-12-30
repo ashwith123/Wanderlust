@@ -20,6 +20,27 @@
         <li class="nav-item">
           <a class="nav-link" href="/listings/new">Add new Listings</a>
         </li>
+        <li>
+          <form
+            class="form-inline d-flex align-items-center"
+            action="/listings/recomendations"
+            method="post"
+          >
+            <input
+              class="form-control mr-sm-2 nav-item"
+              type="search"
+              name="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button
+              class="nav-item btn btn-outline-success my-2 my-sm-0"
+              type="submit"
+            >
+              Search
+            </button>
+          </form>
+        </li>
       </ul>
     </div>
   </div>
