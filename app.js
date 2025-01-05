@@ -7,81 +7,92 @@ const methodOverride = require("method-override");
 const ejsmate = require("ejs-mate");
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
+app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsmate);
 app.use(express.static(path.join(__dirname, "public")));
 
-// checks if connection is successfull main is name of function in which connection is being given
+// checks if connection is successful
 main()
   .then(() => {
-    console.log("connection sucessul");
+    console.log("connection successful");
   })
   .catch((err) => {
     console.log(err);
   });
 
-//connecting mongoose
+// Connecting mongoose
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
 
 app.get("/", (req, res) => {
-  res.send("hi this is projects Root");
+  res.send("hi this is project's Root");
 });
 
-//index rout
-app.get("/listings/", async (req, res) => {
-  const allListings = await Listing.find({});
-  res.render("../views/listings/index.ejs", { allListings });
-  console.log(allListings);
+// Index route
+app.get("/listings/", async (req, res, next) => {
+  try {
+    const allListings = await Listing.find({});
+    res.render("../views/listings/index.ejs", { allListings });
+  } catch (error) {
+    next(error); // Pass the error to the next middleware
+  }
 });
 
-//NEW ROUT
+// New route
 app.get("/listings/new", (req, res) => {
   res.render("../views/listings/new.ejs");
 });
 
-//CREATE ROUT
+// Create route
 app.post("/listings", async (req, res, next) => {
   try {
     let listing = req.body.listing;
-    const newlisting = new Listing(listing);
-    await newlisting.save();
+    const newListing = new Listing(listing);
+    await newListing.save();
     res.redirect("/listings");
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error); // Pass the error to the next middleware
   }
 });
 
-//EDIT ROUT
-app.get("/listings/:id/edit", async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("../views/listings/edit.ejs", { listing });
+// Edit route
+app.get("/listings/:id/edit", async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    const listing = await Listing.findById(id);
+    res.render("../views/listings/edit.ejs", { listing });
+  } catch (error) {
+    next(error); // Pass the error to the next middleware
+  }
 });
 
-//UPDATE ROUT
-app.put("/listings/:id", async (err, next, req, res) => {
-  let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-  res.redirect("/listings/${id}");
+// Update route
+app.put("/listings/:id", async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    const updatedListing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true });
+    res.redirect(`/listings/${id}`);
+  } catch (error) {
+    next(error); // Pass the error to the next middleware
+  }
 });
 
-app.use((next, err, res, req) => {
-  res.send("there is some mistake");
+// Show route
+app.get("/listings/:id", async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    const listing = await Listing.findById(id);
+    res.render("../views/listings/show.ejs", { listing });
+  } catch (error) {
+    next(error); // Pass the error to the next middleware
+  }
 });
 
-//show rout
-app.get("/listings/:id", async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("../views/listings/show.ejs", { listing });
-});
-
-//DELETE LISTING WITH HANDLING CASE IF LISTING DOESNT EXIST
-app.delete("/listings/:id", async (req, res) => {
+// Delete route
+app.delete("/listings/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const deletedListing = await Listing.findByIdAndDelete(id);
@@ -91,27 +102,18 @@ app.delete("/listings/:id", async (req, res) => {
     }
 
     console.log(`Deleted listing: ${deletedListing}`);
-    res.redirect("/listings"); // Ensure this path exists in your app
+    res.redirect("/listings");
   } catch (error) {
-    console.error("Error deleting listing:", error);
-    res.status(500).send("Server error");
+    next(error); // Pass the error to the next middleware
   }
 });
 
-app.listen(7070, () => {
-  console.log("server is listening");
+// Centralized error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log the error stack trace
+  res.status(500).render("error", { error: err }); // Render error.ejs with the error details
 });
 
-// // // this is adding an new list to listing module created in listing.js and reuired here
-// app.get("/test", (req, res) => {
-//   let samplelist = new Listing({
-//     title: "ashre",
-//     descrition: "i am good",
-//     price: 1200,
-//     location: "goa",
-//     country: "india",
-//   });
-//   samplelist.save();
-//   console.log("data saved and working ");
-//   res.send("sucessfull");
-// });
+app.listen(8080, () => {
+  console.log("server is listening on port 8080");
+});

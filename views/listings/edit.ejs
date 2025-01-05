@@ -3,79 +3,94 @@
 <body>
   <br />
   <div class="row">
-    <div class="col-8 offset-2">
-      <h1>Edit your listing</h1>
-      <form method="post" action="/listings/<%=listing._id %>?_method=PUT">
-        <label for="title">Edit the title</label>
-        <input
-          name="listing[title]"
-          value="<%=listing.title%>"
-          type="text"
-          id="title"
-          class="form-control"
-        />
-        <br />
-        <label for="description">Edit the description</label>
+    <div class="col-7 offset-2">
+      <h3 style="text-align: center;">Edit your listing</h3>
+      <form method="post" action="/listings/<%= listing._id %>?_method=PUT">
+        
+        <!-- Edit the Title -->
+        <div class="form-group">
+          <label for="title">Edit the title</label>
+          <input
+            name="listing[title]"
+            value="<%= listing.title %>"
+            type="text"
+            id="title"
+            class="form-control"
+          />
+        </div>
+    
 
-        <textarea
-          name="listing[description]"
-          value="<%=listing.textarea%> "
-          class="form-control"
-          id="description"
-        ></textarea>
-        <br />
-        <label for="image">Edit the image</label>
+        <!-- Edit the Description -->
+        <div class="form-group">
+          <label for="description">Edit the description</label>
+          <textarea
+            name="listing[description]"
+            class="form-control"
+            id="description"
+          ><%= listing.description %></textarea>
+        </div>
+ 
 
-        <input
-          name="listing[image]"
-          value="<%=listing.image.url%> "
-          type="text"
-          class="form-control"
-          id="image"
-        />
-        <br />
+        <!-- Edit the Image -->
+        <div class="form-group">
+          <label for="image">Edit the image</label>
+          <input
+            name="listing[image]"
+            value="<%= listing.image %>"
+            type="text"
+            class="form-control"
+            id="image"
+          />
+        </div>
+      
 
         <div class="row">
-          <div class="mb-3 col-md-4">
+          <!-- Edit the Price -->
+          <div class="form-group col-md-4">
             <label for="price">Edit the price</label>
-
             <input
               name="listing[price]"
-              value="<%=listing.price%> "
+              value="<%= listing.price %>"
               type="number"
               class="form-control"
               id="price"
             />
           </div>
-          <br />
+         
 
-          <div class="mb-3 col-md-8">
+          <!-- Edit the Country -->
+          <div class="form-group col-md-8">
             <label for="country">Edit the country</label>
             <input
               name="listing[country]"
-              value="<%=listing.country%> "
+              value="<%= listing.country %>"
               type="text"
               class="form-control"
               id="country"
             />
           </div>
-          <br />
+        
         </div>
-        <label for="location">Edit the description</label>
 
-        <input
-          name="listing[location]"
-          value="<%=listing.location%> "
-          type="text"
-          class="form-control"
-          id="location"
-        /><br />
-        <br />
+        <!-- Edit the Location -->
+        <div class="form-group">
+          <label for="location">Edit the location</label>
+          <input
+            name="listing[location]"
+            value="<%= listing.location %>"
+            type="text"
+            class="form-control"
+            id="location"
+          />
+        </div>
+  
+
+        <!-- Submit Button -->
         <button
           class="btn btn-dark add-btn"
           style="background-color: red; border: none"
         >
-          edit
+          Edit
         </button>
       </form>
     </div>
