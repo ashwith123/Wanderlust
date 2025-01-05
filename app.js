@@ -5,6 +5,8 @@ const Listing = require("./models/listing");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsmate = require("ejs-mate");
+const wrapAsync = require("./utils/wrapAsyn");
+const expressError = require("./utils/expressError");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
@@ -35,7 +37,6 @@ app.get("/", (req, res) => {
 app.get("/listings/", async (req, res) => {
   const allListings = await Listing.find({});
   res.render("../views/listings/index.ejs", { allListings });
-  console.log(allListings);
 });
 
 //NEW ROUT
@@ -44,16 +45,15 @@ app.get("/listings/new", (req, res) => {
 });
 
 //CREATE ROUT
-app.post("/listings", async (req, res, next) => {
-  try {
+app.post(
+  "/listings",
+  wrapAsync(async (req, res, next) => {
     let listing = req.body.listing;
     const newlisting = new Listing(listing);
     await newlisting.save();
     res.redirect("/listings");
-  } catch (err) {
-    next(err);
-  }
-});
+  })
+);
 
 //EDIT ROUT
 app.get("/listings/:id/edit", async (req, res) => {
@@ -67,10 +67,6 @@ app.put("/listings/:id", async (err, next, req, res) => {
   let { id } = req.params;
   await Listing.findByIdAndUpdate(id, { ...req.body.listing });
   res.redirect("/listings/${id}");
-});
-
-app.use((next, err, res, req) => {
-  res.send("there is some mistake");
 });
 
 //show rout
@@ -115,3 +111,12 @@ app.listen(7070, () => {
 //   console.log("data saved and working ");
 //   res.send("sucessfull");
 // });
+app.all("*", (req, res, next) => {
+  next(new expressError("page not found", 404));
+});
+
+//middleware to handel error
+app.use((err, req, res, next) => {
+  let { message, status } = err;
+  res.status(status).send(message);
+});
