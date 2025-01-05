@@ -90,30 +90,6 @@ app.delete("/listings/:id", async (req, res) => {
   }
 });
 
-//recomendations handlingg
-
-const axios = require("axios");
-
-app.post("/listings/recomendations", async (req, res) => {
-  const searchQuery = req.body.search; // Get the search term from the user
-
-  const response = await axios.post("http://127.0.0.1:5000/recommend", {
-    search: searchQuery,
-  });
-
-  // Get the recommendations from the Python API's response
-  const recommendations = response.data;
-
-  if (!recommendations || Object.keys(recommendations).length === 0) {
-    return res.render("../views/listings/recommendations.ejs", {
-      recommendations: null,
-    });
-  }
-
-  // Render recommendations.ejs with the data
-  res.render("../views/listings/recommendations.ejs", { recommendations });
-});
-
 app.listen(7070, () => {
   console.log("server is listening");
 });
