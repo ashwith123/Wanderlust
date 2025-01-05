@@ -1,8 +1,16 @@
 <% layout("layouts/boilerplate") %>
 <body>
   <div class="col-7 offset-2">
+<<<<<<< HEAD
     <h1 style="text-align: center;">Create New listing</h1>
     <form method="post" action="/listings">
+=======
+    <br />
+    <br />
+
+    <h1>Create New listing</h1>
+    <form method="post" action="/listings" class="needs-validation" novalidate>
+>>>>>>> main
       <div class="form-group">
         <label for="title">Title</label>
         <input
@@ -10,7 +18,9 @@
           class="form-control"
           placeholder="Add Title"
           id="title"
+          required
         />
+        <div class="invalid-feedback">Please keep Title.</div>
       </div>
       <div class="form-group">
         <label for="description">Description</label>
@@ -19,7 +29,9 @@
           name="listing[description]"
           placeholder="enter description"
           id="description"
+          required
         ></textarea>
+        <div class="invalid-feedback">Please keep a description.</div>
       </div>
       <div class="form-group">
         <label for="imgurl">Image URL</label>
@@ -28,7 +40,9 @@
           name="listing[image]"
           placeholder="enter image url"
           id="imgurl"
+          required
         />
+        <div class="invalid-feedback">Please take a image url.</div>
       </div>
       <div class="row">
         <div class="form-group col-4">
@@ -38,7 +52,9 @@
             placeholder=" india"
             class="form-control"
             id="price"
+            required
           />
+          <div class="invalid-feedback">Please keep a price.</div>
         </div>
         <div class="form-group col-8">
           <label for="country">Enter country name</label>
@@ -47,7 +63,9 @@
             class="form-control"
             placeholder="enter location"
             id="country"
+            required
           />
+          <div class="invalid-feedback">Please type a country.</div>
         </div>
       </div>
       <div class="form-group">
@@ -57,7 +75,9 @@
           name="listing[location]"
           placeholder="enter title"
           id="location"
+          required
         />
+        <div class="invalid-feedback">Please keep a location.</div>
       </div>
       <br />
 

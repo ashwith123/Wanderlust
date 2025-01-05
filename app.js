@@ -47,6 +47,7 @@ app.get("/listings/new", (req, res) => {
   res.render("../views/listings/new.ejs");
 });
 
+<<<<<<< HEAD
 // Create route
 app.post("/listings", async (req, res, next) => {
   try {
@@ -56,6 +57,17 @@ app.post("/listings", async (req, res, next) => {
     res.redirect("/listings");
   } catch (error) {
     next(error); // Pass the error to the next middleware
+=======
+//CREATE ROUT
+app.post("/listings", async (req, res, next) => {
+  try {
+    let listing = req.body.listing;
+    const newlisting = new Listing(listing);
+    await newlisting.save();
+    res.redirect("/listings");
+  } catch (err) {
+    next(err);
+>>>>>>> main
   }
 });
 
@@ -70,6 +82,7 @@ app.get("/listings/:id/edit", async (req, res, next) => {
   }
 });
 
+<<<<<<< HEAD
 // Update route
 app.put("/listings/:id", async (req, res, next) => {
   try {
@@ -90,6 +103,24 @@ app.get("/listings/:id", async (req, res, next) => {
   } catch (error) {
     next(error); // Pass the error to the next middleware
   }
+=======
+//UPDATE ROUT
+app.put("/listings/:id", async (err, next, req, res) => {
+  let { id } = req.params;
+  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  res.redirect("/listings/${id}");
+});
+
+app.use((next, err, res, req) => {
+  res.send("there is some mistake");
+});
+
+//show rout
+app.get("/listings/:id", async (req, res) => {
+  let { id } = req.params;
+  const listing = await Listing.findById(id);
+  res.render("../views/listings/show.ejs", { listing });
+>>>>>>> main
 });
 
 // Delete route
