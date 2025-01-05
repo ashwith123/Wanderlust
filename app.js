@@ -44,11 +44,15 @@ app.get("/listings/new", (req, res) => {
 });
 
 //CREATE ROUT
-app.post("/listings", async (req, res) => {
-  let listing = req.body.listing;
-  const newlisting = new Listing(listing);
-  await newlisting.save();
-  res.redirect("/listings");
+app.post("/listings", async (req, res, next) => {
+  try {
+    let listing = req.body.listing;
+    const newlisting = new Listing(listing);
+    await newlisting.save();
+    res.redirect("/listings");
+  } catch (err) {
+    next(err);
+  }
 });
 
 //EDIT ROUT
@@ -59,10 +63,14 @@ app.get("/listings/:id/edit", async (req, res) => {
 });
 
 //UPDATE ROUT
-app.put("/listings/:id", async (req, res) => {
+app.put("/listings/:id", async (err, next, req, res) => {
   let { id } = req.params;
   await Listing.findByIdAndUpdate(id, { ...req.body.listing });
   res.redirect("/listings/${id}");
+});
+
+app.use((next, err, res, req) => {
+  res.send("there is some mistake");
 });
 
 //show rout
