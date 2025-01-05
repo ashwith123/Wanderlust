@@ -1,0 +1,85 @@
+<!-- views/error.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error - Something Went Wrong</title>
+  <style>
+    /* Overall page styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Container to center content */
+    .error-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 600px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    /* Heading styling */
+    h1 {
+      color: #dc3545;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    /* Subheading for error message */
+    .error-message {
+      font-size: 18px;
+      color: #6c757d;
+      margin-bottom: 20px;
+    }
+
+    /* Stack trace section */
+    pre {
+      background-color: #f1f1f1;
+      padding: 15px;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: #e83e8c;
+      margin-bottom: 20px;
+    }
+
+    /* Button styling */
+    a {
+      text-decoration: none;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <h1>Oops! Something Went Wrong.</h1>
+    <p class="error-message"><strong>Error Message:</strong> <%= error.message %></p>
+    <p class="error-message"><strong>Details:</strong> Something unexpected happened. We are working on fixing it.</p>
+    <pre><strong>Stack Trace:</strong> <%= error.stack %></pre>
+    <a href="/listings">Go back to Listings</a>
+  </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-.navbar {
+/* .navbar {
   height: 5rem;
   background-color: white;
 }
@@ -12,7 +12,7 @@
   color: black !important;
 }
 
-/*fotter*/
+
 .my-info {
   width: 100%;
 }
@@ -56,7 +56,7 @@
   align-items: center;
 }
 
-/*image styling*/
+
 
 a {
   text-decoration: none !important;
@@ -88,4 +88,351 @@ a {
 
 .card:hover {
   opacity: 0.7;
+} */
+
+
+
+
+
+
+
+
+
+
+/* Navbar styling */
+/* .navbar {
+  height: 5rem;
+  background-color: white;
+}
+
+.compass {
+  color: red;
+  font-size: 2rem;
+}
+
+.nav-link {
+  color: black !important;
+}
+
+
+.my-info {
+  width: 100%;
+}
+
+.my-info i {
+  font-size: 1.3rem;
+  margin-right: 1rem;
+  text-decoration: none;
+  color: #222222;
+}
+
+.my-info i:hover {
+  color: blue;
+}
+
+.links {
+  width: 100%;
+}
+
+.links a {
+  text-decoration: none !important;
+  color: #222222;
+}
+
+.links a:hover {
+  text-decoration: underline !important;
+  color: blue;
+}
+
+.name {
+  width: 100%;
+}
+
+.footclass {
+  text-align: center;
+  background-color: #ebebeb;
+  display: flex;
+  justify-content: center;
+  color: #222222;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+
+a {
+  text-decoration: none !important;
+}
+
+.card {
+  border: none !important;
+  margin-bottom: 2rem;
+}
+
+.card-img-top {
+  border-radius: 1rem !important;
+  width: 100% !important;
+  height: 15rem !important;
+  object-fit: cover !important;
+}
+
+.card-body {
+  padding: 0% !important;
+}
+
+* {
+  font-weight: 400;
+}
+
+.anchor-style {
+  text-decoration: none !important;
+  color: #222222 !important;
+}
+
+.card:hover {
+  opacity: 0.7;
+} */
+
+
+
+
+
+
+/* Navbar Styling */
+.navbar {
+  height: 5rem;
+  background-color: white;
+}
+
+.compass {
+  color: red;
+  font-size: 2rem;
+}
+
+.nav-link {
+  color: black !important;
+}
+
+/* Footer Styling */
+.my-info {
+  width: 100%;
+}
+
+.my-info i {
+  font-size: 1.3rem;
+  margin-right: 1rem;
+  text-decoration: none;
+  color: #222222;
+}
+
+.my-info i:hover {
+  color: blue;
+}
+
+.links {
+  width: 100%;
+}
+
+.links a {
+  text-decoration: none !important;
+  color: #222222;
+}
+
+.links a:hover {
+  text-decoration: underline !important;
+  color: blue;
+}
+
+.name {
+  width: 100%;
+}
+
+.footclass {
+  text-align: center;
+  background-color: #ebebeb;
+  display: flex;
+  justify-content: center;
+  color: #222222;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Card Styling */
+.card {
+  border: none !important;
+  margin-bottom: 2rem;
+}
+
+.card-img-top {
+  border-radius: 1rem !important;
+  height: 20rem !important;
+  object-fit: cover !important;
+}
+
+.card-body {
+  padding: 0% !important;
+}
+
+.card:hover {
+  opacity: 0.7;
+}
+
+/* Global Styling */
+* {
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.anchor-style {
+  text-decoration: none !important;
+  color: #222222 !important;
+}
+
+/* Show Page Styling */
+.show-container {
+  margin: 2rem auto;
+  max-width: 600px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Image styling */
+.image-container {
+  width: 100%;
+  height: 300px; /* Adjust as needed */
+  overflow: hidden;
+}
+
+.listing-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Information section */
+.info-container {
+  padding: 1rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  font-size: 1.1rem;
+}
+
+ul li:last-child {
+  border-bottom: none;
+}
+
+/* Button Styling */
+button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  color: #ffffff;
+  background-color: red;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: darkred;
+  transform: translateY(-2px);
+}
+
+button:active {
+  background-color: crimson;
+  transform: translateY(0);
+}
+
+/* Form Styling */
+form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border: 2px solid #ebebeb;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  color: #333333;
+  background-color: #ffffff;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-color: #007bff;
+  background-color: #ffffff;
+  outline: none;
+}
+
+form textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+form button {
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  background-color: red;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+form button:hover {
+  background-color: darkred;
+  transform: translateY(-2px);
+}
+
+form button:active {
+  background-color: crimson;
+  transform: translateY(0);
+}
+
+/* Optional Form Section Styling */
+form .form-section {
+  margin-bottom: 1.2rem;
+}
+
+form label {
+  font-size: 1.1rem;
+  color: #555555;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+form small {
+  font-size: 0.9rem;
+  color: #888888;
+  margin-top: -0.5rem;
+  display: block;
 }
