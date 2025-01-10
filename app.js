@@ -7,6 +7,7 @@ const methodOverride = require("method-override");
 const ejsmate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsyn");
 const expressError = require("./utils/expressError");
+const listingSchema = require("./schema");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
@@ -34,10 +35,13 @@ app.get("/", (req, res) => {
 });
 
 //index rout
-app.get("/listings/", async (req, res) => {
-  const allListings = await Listing.find({});
-  res.render("../views/listings/index.ejs", { allListings });
-});
+app.get(
+  "/listings/",
+  wrapAsync(async (req, res) => {
+    const allListings = await Listing.find({});
+    res.render("../views/listings/index.ejs", { allListings });
+  })
+);
 
 //NEW ROUT
 app.get("/listings/new", (req, res) => {
@@ -48,6 +52,10 @@ app.get("/listings/new", (req, res) => {
 app.post(
   "/listings",
   wrapAsync(async (req, res, next) => {
+    let result=listingSchema.validate(req.body);//joi for server side validation
+    if(result.error){//if error exist in server side 
+      throw new expressError(404,result.error);
+    }
     let listing = req.body.listing;
     const newlisting = new Listing(listing);
     await newlisting.save();
@@ -56,43 +64,58 @@ app.post(
 );
 
 //EDIT ROUT
-app.get("/listings/:id/edit", async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("../views/listings/edit.ejs", { listing });
-});
+app.get(
+  "/listings/:id/edit",
+  wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    const listing = await Listing.findById(id);
+    res.render("../views/listings/edit.ejs", { listing });
+  })
+);
 
 //UPDATE ROUT
-app.put("/listings/:id", async (err, next, req, res) => {
-  let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-  res.redirect("/listings/${id}");
-});
+app.put(
+  "/listings/:id",
+  wrapAsync(async (err, next, req, res) => {
+    if (!req.body.listing) {
+      throw new expressError(400, "send valid data");
+    }
+    let { id } = req.params;
+    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    res.redirect("/listings/${id}");
+  })
+);
 
 //show rout
-app.get("/listings/:id", async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("../views/listings/show.ejs", { listing });
-});
+app.get(
+  "/listings/:id",
+  wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    const listing = await Listing.findById(id);
+    res.render("../views/listings/show.ejs", { listing });
+  })
+);
 
 //DELETE LISTING WITH HANDLING CASE IF LISTING DOESNT EXIST
-app.delete("/listings/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletedListing = await Listing.findByIdAndDelete(id);
+app.delete(
+  "/listings/:id",
+  wrapAsync(async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deletedListing = await Listing.findByIdAndDelete(id);
 
-    if (!deletedListing) {
-      return res.status(404).send("Listing not found");
+      if (!deletedListing) {
+        return res.status(404).send("Listing not found");
+      }
+
+      console.log(`Deleted listing: ${deletedListing}`);
+      res.redirect("/listings"); // Ensure this path exists in your app
+    } catch (error) {
+      console.error("Error deleting listing:", error);
+      res.status(500).send("Server error");
     }
-
-    console.log(`Deleted listing: ${deletedListing}`);
-    res.redirect("/listings"); // Ensure this path exists in your app
-  } catch (error) {
-    console.error("Error deleting listing:", error);
-    res.status(500).send("Server error");
-  }
-});
+  })
+);
 
 app.listen(7070, () => {
   console.log("server is listening");
@@ -112,11 +135,14 @@ app.listen(7070, () => {
 //   res.send("sucessfull");
 // });
 app.all("*", (req, res, next) => {
+  //handels request routs that doesnt exist other errors are handeled by the below middleware
   next(new expressError("page not found", 404));
 });
 
 //middleware to handel error
 app.use((err, req, res, next) => {
-  let { message, status } = err;
-  res.status(status).send(message);
+  let { message = "something went wrong ie default meaage", status = 500 } =
+    err;
+  res.render("./listings/error.ejs", { message });
+  // res.status(status).send(message);
 });
