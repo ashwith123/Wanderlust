@@ -89,3 +89,9 @@ a {
 .card:hover {
   opacity: 0.7;
 }
+
+/* show-img */
+
+.show-img {
+  width: 18rem;
+}
