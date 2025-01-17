@@ -8,6 +8,7 @@ const ejsmate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsyn");
 const expressError = require("./utils/expressError");
 const listingSchema = require("./schema");
+const Review = require("./models/reviews");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
@@ -52,9 +53,10 @@ app.get("/listings/new", (req, res) => {
 app.post(
   "/listings",
   wrapAsync(async (req, res, next) => {
-    let result=listingSchema.validate(req.body);//joi for server side validation
-    if(result.error){//if error exist in server side 
-      throw new expressError(404,result.error);
+    let result = listingSchema.validate(req.body); //joi for server side validation
+    if (result.error) {
+      //if error exist in server side
+      throw new expressError(404, result.error);
     }
     let listing = req.body.listing;
     const newlisting = new Listing(listing);
@@ -117,6 +119,23 @@ app.delete(
   })
 );
 
+//reviews
+app.post("/listings/:id/review", async (req, res) => {
+  let listing = await Listing.findById(req.params.id);
+  // console.log("Listing found:", listing);
+
+  let review = new Review(req.body.review);
+  // console.log("New review created:", review);
+
+  listing.review.push(review);
+  // console.log("Review pushed to listing:", listing);
+
+  await review.save();
+  await listing.save();
+
+  res.redirect(`/listings/${req.params.id}`);
+});
+
 app.listen(7070, () => {
   console.log("server is listening");
 });
@@ -134,6 +153,7 @@ app.listen(7070, () => {
 //   console.log("data saved and working ");
 //   res.send("sucessfull");
 // });
+
 app.all("*", (req, res, next) => {
   //handels request routs that doesnt exist other errors are handeled by the below middleware
   next(new expressError("page not found", 404));

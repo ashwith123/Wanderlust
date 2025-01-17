@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
-const schema = mongoose.Schema; // schema required from mongoose
+const Schema = mongoose.Schema;
 
-//schema created
-const listingschema = new schema({
+// Define the listings schema
+const listingSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -16,8 +16,15 @@ const listingschema = new schema({
   price: Number,
   location: String,
   country: String,
+
+  review: [
+    {
+      type: Schema.Types.ObjectId, // i dont understand this
+      ref: "review",
+    },
+  ],
 });
 
 // model for schema created
-const listing = mongoose.model("listing", listingschema);
+const listing = mongoose.model("listing", listingSchema);
 module.exports = listing; // module exported
