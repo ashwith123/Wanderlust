@@ -62,9 +62,11 @@ a {
   text-decoration: none !important;
 }
 
-.card {
+.listing-card {
   border: none !important;
   margin-bottom: 2rem;
+  text-decoration: none !important;
+  color: #222222 !important;
 }
 
 .card-img-top {
