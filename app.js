@@ -82,6 +82,15 @@ app.put(
     if (!req.body.listing) {
       throw new expressError(400, "send valid data");
     }
+    const listingData = {
+      title: req.body.title,
+      description: req.body.description,
+      image: req.body.image,
+      price: req.body.price,
+      country: req.body.country,
+      location: req.body.location,
+    };
+
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     res.redirect("/listings/${id}");
@@ -154,15 +163,15 @@ app.listen(7070, () => {
 //   res.send("sucessfull");
 // });
 
-app.all("*", (req, res, next) => {
-  //handels request routs that doesnt exist other errors are handeled by the below middleware
-  next(new expressError("page not found", 404));
-});
+// app.all("*", (req, res, next) => {
+//   //handels request routs that doesnt exist other errors are handeled by the below middleware
+//   next(new expressError("page not found", 404));
+// });
 
-//middleware to handel error
-app.use((err, req, res, next) => {
-  let { message = "something went wrong ie default meaage", status = 500 } =
-    err;
-  res.render("./listings/error.ejs", { message });
-  // res.status(status).send(message);
-});
+// //middleware to handel error
+// app.use((err, req, res, next) => {
+//   let { message = "something went wrong ie default meaage", status = 500 } =
+//     err;
+//   res.render("./listings/error.ejs", { message });
+//   // res.status(status).send(message);
+// });
