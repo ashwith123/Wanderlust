@@ -3,6 +3,7 @@
 // listsing.js inside models is creating a model not a schama
 // model is where the data is store. data is not stored in array its stored in model so we first insert inital data to it using index.js
 
+//this file is run once nodemon index.js so all data is added is model
 
 const mongoose = require("mongoose");
 const Listing = require("../models/listing");
@@ -26,3 +27,4 @@ async function adding() {
 }
 
 adding();
+
