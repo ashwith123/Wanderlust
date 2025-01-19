@@ -1,3 +1,6 @@
+//this initially adds data which exists in data.js 
+//ie it is adding data to Listing which is a model we always add data to model schema is just a bluew print
+
 const mongoose = require("mongoose");
 const Listing = require("../models/listing");
 const initdata = require("./data.js");
