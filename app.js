@@ -1,5 +1,5 @@
 const express = require("express");
-const app = express();
+var app = express();
 const mongoose = require("mongoose");
 const Listing = require("./models/listing");
 const path = require("path");
@@ -10,6 +10,8 @@ const expressError = require("./utils/expressError");
 const listingSchema = require("./schema");
 const Review = require("./models/reviews");
 const userRouter = require("./routes/user");
+const flash = require("connect-flash");
+const sessions = require("express-session");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
@@ -18,8 +20,17 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsmate);
 app.use(express.static(path.join(__dirname, "public")));
 
-//routes
-app.use("/", userRouter);
+//sessions-ie store temp info or cokkie
+const sessionOptions = {
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    // this will not ask login for certain time
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 3,
+    maxAge: 1000 * 60 * 60 * 24 * 3,
+  },
+};
 
 // checks if connection is successfull main is name of function in which connection is being given
 main()
@@ -36,8 +47,21 @@ async function main() {
 }
 
 app.get("/", (req, res) => {
+  req.flash("sucess", "user registered successfully");
   res.send("hi this is projects Root");
 });
+
+app.use(sessions(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.sucess = req.flash("sucess");
+  res.locals.error = req.flash("error");
+  next();
+});
+
+//routes
+app.use("/", userRouter);
 
 //index rout
 app.get(
@@ -54,9 +78,8 @@ app.get("/listings/new", (req, res) => {
 });
 
 //CREATE ROUT
-app.post(
-  "/listings",
-  wrapAsync(async (req, res, next) => {
+app.post("/listings", async (req, res, next) => {
+  try {
     let result = listingSchema.validate(req.body); //joi for server side validation
     if (result.error) {
       //if error exist in server side
@@ -65,9 +88,12 @@ app.post(
     let listing = req.body.listing;
     const newlisting = new Listing(listing);
     await newlisting.save();
+    req.flash("sucess", "new listings created");
     res.redirect("/listings");
-  })
-);
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 //EDIT ROUT
 app.get(
@@ -75,6 +101,7 @@ app.get(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
+
     res.render("../views/listings/edit.ejs", { listing });
   })
 );
@@ -99,6 +126,8 @@ app.put(
 
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    req.flash("sucess", "new listings created");
+
     res.redirect(`/listings/${id}`);
     console.log(req.body.listing);
   })
@@ -110,6 +139,10 @@ app.get(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id).populate("review");
+    if (!listing) {
+      req.flash("error", "listings you want to acces doesnt exist");
+      res.redirect("/listings");
+    }
     res.render("../views/listings/show.ejs", { listing });
   })
 );
@@ -127,6 +160,8 @@ app.delete(
       }
 
       console.log(`Deleted listing: ${deletedListing}`);
+      req.flash("sucess", " listings deleted sucessfully");
+
       res.redirect("/listings"); // Ensure this path exists in your app
     } catch (error) {
       console.error("Error deleting listing:", error);
@@ -155,20 +190,6 @@ app.post("/listings/:id/review", async (req, res) => {
 app.listen(7070, () => {
   console.log("server is listening");
 });
-
-// // // this is adding an new list to listing module created in listing.js and reuired here
-// app.get("/test", (req, res) => {
-//   let samplelist = new Listing({
-//     title: "ashre",
-//     descrition: "i am good",
-//     price: 1200,
-//     location: "goa",
-//     country: "india",
-//   });
-//   samplelist.save();
-//   console.log("data saved and working ");
-//   res.send("sucessfull");
-// });
 
 app.all("*", (req, res, next) => {
   //handels request routs that doesnt exist other errors are handeled by the below middleware

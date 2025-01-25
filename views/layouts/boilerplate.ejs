@@ -25,7 +25,11 @@
     <!--navbar-->
     <%- include("../includes/navbar.ejs") %>
 
-    <div class="container"><%- body %></div>
+    <!--body-->
+    <div class="container">
+      <!--flash-->
+      <%- include("../includes/flash.ejs") %> <%- body %>
+    </div>
 
     <!--Fotter-->
     <%-include("../includes/fotter.ejs")%>
