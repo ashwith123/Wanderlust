@@ -9,6 +9,7 @@ const wrapAsync = require("./utils/wrapAsyn");
 const expressError = require("./utils/expressError");
 const listingSchema = require("./schema");
 const Review = require("./models/reviews");
+const userRouter = require("./routes/user");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
@@ -16,6 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsmate);
 app.use(express.static(path.join(__dirname, "public")));
+
+//routes
+app.use("/", userRouter);
 
 // checks if connection is successfull main is name of function in which connection is being given
 main()
@@ -78,14 +82,16 @@ app.get(
 //UPDATE ROUT
 app.put(
   "/listings/:id",
-  wrapAsync(async (err, next, req, res) => {
-    if (!req.body.listing) {
-      throw new expressError(400, "send valid data");
-    }
+  wrapAsync(async (req, res, next) => {
+    const existingListing = await Listing.findById(req.params.id);
+
     const listingData = {
       title: req.body.title,
       description: req.body.description,
-      image: req.body.image,
+      image: {
+        url: req.body.image, // This assumes you're getting the image URL directly from the form input
+        filename: existingListing.image.filename, // Retain the existing filename from the database
+      },
       price: req.body.price,
       country: req.body.country,
       location: req.body.location,
@@ -93,7 +99,8 @@ app.put(
 
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-    res.redirect("/listings/${id}");
+    res.redirect(`/listings/${id}`);
+    console.log(req.body.listing);
   })
 );
 
@@ -163,15 +170,15 @@ app.listen(7070, () => {
 //   res.send("sucessfull");
 // });
 
-// app.all("*", (req, res, next) => {
-//   //handels request routs that doesnt exist other errors are handeled by the below middleware
-//   next(new expressError("page not found", 404));
-// });
+app.all("*", (req, res, next) => {
+  //handels request routs that doesnt exist other errors are handeled by the below middleware
+  next(new expressError("page not found", 404));
+});
 
-// //middleware to handel error
-// app.use((err, req, res, next) => {
-//   let { message = "something went wrong ie default meaage", status = 500 } =
-//     err;
-//   res.render("./listings/error.ejs", { message });
-//   // res.status(status).send(message);
-// });
+//middleware to handel error
+app.use((err, req, res, next) => {
+  let { message = "something went wrong ie default meaage", status = 500 } =
+    err;
+  res.render("./listings/error.ejs", { message });
+  // res.status(status).send(message);
+});

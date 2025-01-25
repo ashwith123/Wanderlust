@@ -6,7 +6,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const userSchema = new Schema({
   //here this adds useranme and password to schema but they can be overwriiten
   email: {
-    type: string,
+    type: String,
     require: true,
   },
 });
