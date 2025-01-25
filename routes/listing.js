@@ -5,6 +5,7 @@ const wrapAsync = require("../utils/wrapAsyn");
 const expressError = require("../utils/expressError");
 const listingSchema = require("../schema");
 const Review = require("../models/reviews");
+const { isLoggedIn } = require("../middleware");
 
 //index rout
 router.get(
@@ -16,12 +17,16 @@ router.get(
 );
 
 //NEW ROUT
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
+  if (!req.isAuthenticated) {
+    req.flash("error", "you must be logged in for this feature");
+    res.render("/listings");
+  }
   res.render("../views/listings/new.ejs");
 });
 
 //CREATE ROUT
-router.post("/", async (req, res, next) => {
+router.post("/", isLoggedIn, async (req, res, next) => {
   try {
     let result = listingSchema.validate(req.body); //joi for server side validation
     if (result.error) {
@@ -41,6 +46,7 @@ router.post("/", async (req, res, next) => {
 //EDIT ROUT
 router.get(
   "/:id/edit",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -52,6 +58,7 @@ router.get(
 //UPDATE ROUT
 router.put(
   "/:id",
+  isLoggedIn,
   wrapAsync(async (req, res, next) => {
     const existingListing = await Listing.findById(req.params.id);
 
@@ -93,6 +100,7 @@ router.get(
 //DELETE LISTING WITH HANDLING CASE IF LISTING DOESNT EXIST
 router.delete(
   "/:id",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     try {
       const { id } = req.params;
