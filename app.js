@@ -10,8 +10,11 @@ const expressError = require("./utils/expressError");
 const listingSchema = require("./schema");
 const Review = require("./models/reviews");
 const userRouter = require("./routes/user");
+const listingRouter = require("./routes/listing");
+const reviewRouter = require("./routes/reviews.js");
 const flash = require("connect-flash");
 const sessions = require("express-session");
+const passport = require("passport");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
@@ -32,159 +35,48 @@ const sessionOptions = {
   },
 };
 
+app.use(sessions(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
+
 // checks if connection is successfull main is name of function in which connection is being given
 main()
   .then(() => {
-    console.log("connection sucessul");
+    console.log("connection successul");
   })
   .catch((err) => {
     console.log(err);
   });
-
 //connecting mongoose
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
 
+//routes
+app.use("/", userRouter);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/review", reviewRouter);
+
 app.get("/", (req, res) => {
-  req.flash("sucess", "user registered successfully");
+  req.flash("success", "user registered successfully");
   res.send("hi this is projects Root");
 });
 
-app.use(sessions(sessionOptions));
-app.use(flash());
-
-app.use((req, res, next) => {
-  res.locals.sucess = req.flash("sucess");
-  res.locals.error = req.flash("error");
-  next();
-});
-
-//routes
-app.use("/", userRouter);
-
-//index rout
-app.get(
-  "/listings/",
-  wrapAsync(async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("../views/listings/index.ejs", { allListings });
-  })
-);
-
-//NEW ROUT
-app.get("/listings/new", (req, res) => {
-  res.render("../views/listings/new.ejs");
-});
-
-//CREATE ROUT
-app.post("/listings", async (req, res, next) => {
-  try {
-    let result = listingSchema.validate(req.body); //joi for server side validation
-    if (result.error) {
-      //if error exist in server side
-      throw new expressError(404, result.error);
-    }
-    let listing = req.body.listing;
-    const newlisting = new Listing(listing);
-    await newlisting.save();
-    req.flash("sucess", "new listings created");
-    res.redirect("/listings");
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-//EDIT ROUT
-app.get(
-  "/listings/:id/edit",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id);
-
-    res.render("../views/listings/edit.ejs", { listing });
-  })
-);
-
-//UPDATE ROUT
-app.put(
-  "/listings/:id",
-  wrapAsync(async (req, res, next) => {
-    const existingListing = await Listing.findById(req.params.id);
-
-    const listingData = {
-      title: req.body.title,
-      description: req.body.description,
-      image: {
-        url: req.body.image, // This assumes you're getting the image URL directly from the form input
-        filename: existingListing.image.filename, // Retain the existing filename from the database
-      },
-      price: req.body.price,
-      country: req.body.country,
-      location: req.body.location,
-    };
-
-    let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-    req.flash("sucess", "new listings created");
-
-    res.redirect(`/listings/${id}`);
-    console.log(req.body.listing);
-  })
-);
-
-//show rout
-app.get(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id).populate("review");
-    if (!listing) {
-      req.flash("error", "listings you want to acces doesnt exist");
-      res.redirect("/listings");
-    }
-    res.render("../views/listings/show.ejs", { listing });
-  })
-);
-
-//DELETE LISTING WITH HANDLING CASE IF LISTING DOESNT EXIST
-app.delete(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    try {
-      const { id } = req.params;
-      const deletedListing = await Listing.findByIdAndDelete(id);
-
-      if (!deletedListing) {
-        return res.status(404).send("Listing not found");
-      }
-
-      console.log(`Deleted listing: ${deletedListing}`);
-      req.flash("sucess", " listings deleted sucessfully");
-
-      res.redirect("/listings"); // Ensure this path exists in your app
-    } catch (error) {
-      console.error("Error deleting listing:", error);
-      res.status(500).send("Server error");
-    }
-  })
-);
-
 //reviews
-app.post("/listings/:id/review", async (req, res) => {
+
+app.post("/listings/<%=listing._id%>/review", async (req, res) => {
   let listing = await Listing.findById(req.params.id);
-  // console.log("Listing found:", listing);
+  let newReview = new Review(req.body.review);
 
-  let review = new Review(req.body.review);
-  // console.log("New review created:", review);
+  Listing.review.push(newReview);
 
-  listing.review.push(review);
-  // console.log("Review pushed to listing:", listing);
-
-  await review.save();
+  await newReview.save(); //cr
   await listing.save();
-
-  res.redirect(`/listings/${req.params.id}`);
 });
 
 app.listen(7070, () => {
