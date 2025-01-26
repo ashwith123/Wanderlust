@@ -18,10 +18,6 @@ router.get(
 
 //NEW ROUT
 router.get("/new", isLoggedIn, (req, res) => {
-  if (!req.isAuthenticated) {
-    req.flash("error", "you must be logged in for this feature");
-    res.render("/listings");
-  }
   res.render("../views/listings/new.ejs");
 });
 

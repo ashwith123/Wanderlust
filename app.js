@@ -1,20 +1,23 @@
+// app.js
 const express = require("express");
 var app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsmate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsyn");
-const expressError = require("./utils/expressError");
-const listingSchema = require("./schema");
-const Review = require("./models/reviews");
-const userRouter = require("./routes/user");
-const listingRouter = require("./routes/listing");
-const reviewRouter = require("./routes/reviews.js");
 const flash = require("connect-flash");
 const sessions = require("express-session");
 const passport = require("passport");
+
+// Importing models, routes, utilities
+const Listing = require("./models/listing");
+const Review = require("./models/reviews");
+const userRouter = require("./routes/user");
+const listingRouter = require("./routes/listing");
+const reviewRouter = require("./routes/reviews");
+const expressError = require("./utils/expressError");
+const wrapAsync = require("./utils/wrapAsyn");
+const User = require("./models/user");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Make sure views folder is set correctly
@@ -27,7 +30,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const sessionOptions = {
   secret: "mysupersecretcode",
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     // this will not ask login for certain time
     expires: Date.now() + 1000 * 60 * 60 * 24 * 3,
@@ -36,11 +39,24 @@ const sessionOptions = {
 };
 
 app.use(sessions(sessionOptions));
+
+// Passport initialization (Fix: Ensure this order)
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(User.serializeUser()); //since i am also using llocal-mongoose
+passport.deserializeUser(User.deserializeUser()); //these 2 only store if user is loged in or not
+
+// Flash messages
 app.use(flash());
 
+//for passports
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currUser = req.user; // this is storing if user is logged in or not which is being used in navbar logic
+  console.log("Session Data:", req.session); // Debug log for session
+  console.log("Authenticated User:", req.user); // Debug log for user
   next();
 });
 
@@ -53,9 +69,6 @@ main()
     console.log(err);
   });
 //connecting mongoose
-async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
-}
 
 //routes
 app.use("/", userRouter);
@@ -63,20 +76,7 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/review", reviewRouter);
 
 app.get("/", (req, res) => {
-  req.flash("success", "user registered successfully");
   res.send("hi this is projects Root");
-});
-
-//reviews
-
-app.post("/listings/<%=listing._id%>/review", async (req, res) => {
-  let listing = await Listing.findById(req.params.id);
-  let newReview = new Review(req.body.review);
-
-  Listing.review.push(newReview);
-
-  await newReview.save(); //cr
-  await listing.save();
 });
 
 app.listen(7070, () => {
@@ -95,3 +95,7 @@ app.use((err, req, res, next) => {
   res.render("./listings/error.ejs", { message });
   // res.status(status).send(message);
 });
+
+async function main() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+}

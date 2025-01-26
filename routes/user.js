@@ -4,9 +4,12 @@ const User = require("../models/user");
 const wrapAsyn = require("../utils/wrapAsyn");
 const session = require("express-session");
 const passport = require("passport");
+const { saveRedirectUrl } = require("../middleware"); //this is middleware use to go to previus page after loggin
 const LocalStrategy = require("passport-local").Strategy; // Import the LocalStrategy
 
 passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser()); // Store user in session
+passport.deserializeUser(User.deserializeUser()); // Retrieve user from session
 
 passport.serializeUser(User.serializeUser()); //since i am also using llocal-mongoose
 passport.deserializeUser(User.deserializeUser());
@@ -34,22 +37,30 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
+  saveRedirectUrl,
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
   }),
   async (req, res) => {
     req.flash("success", "welcome to wandelust");
-    res.redirect("/listings");
+    console.log("Logged-in User:", req.user);
+    if (res.locals.redirectUrl) {
+      //when you go directly to home page and login the is loggedin middle ware is not triggerred and die to which the next middle ware is also not triggered
+      res.redirect(res.locals.redirectUrl);
+    } else {
+      res.redirect("/listings");
+    }
   }
 );
 
-router.get("/logut", (req, res) => {
+router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) {
-      nect(err);
+      console.log(err);
+      return next(err);
     }
-    req.flash("sucess", "you are logged out now");
+    req.flash("success", "you have successfully logged out now");
     res.redirect("/listings");
   });
 });
