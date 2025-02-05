@@ -31,6 +31,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
     }
     let listing = req.body.listing;
     const newlisting = new Listing(listing);
+    newlisting.owner = req.user._id; //adds username and mail to owner
     await newlisting.save();
     req.flash("success", "new listings created");
     res.redirect("/listings");
@@ -84,11 +85,12 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate("review");
+    const listing = await Listing.findById(id).populate("owner");
     if (!listing) {
       req.flash("error", "listings you want to acces doesnt exist");
       res.redirect("/listings");
     }
+    console.log(listing);
     res.render("../views/listings/show.ejs", { listing });
   })
 );

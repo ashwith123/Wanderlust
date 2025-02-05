@@ -83,18 +83,18 @@ app.listen(7070, () => {
   console.log("server is listening");
 });
 
-app.all("*", (req, res, next) => {
-  //handels request routs that doesnt exist other errors are handeled by the below middleware
-  next(new expressError("page not found", 404));
-});
+// app.all("*", (req, res, next) => {
+//   //handels request routs that doesnt exist other errors are handeled by the below middleware
+//   next(new expressError("page not found", 404));
+// });
 
-//middleware to handel error
-app.use((err, req, res, next) => {
-  let { message = "something went wrong ie default meaage", status = 500 } =
-    err;
-  res.render("./listings/error.ejs", { message });
-  // res.status(status).send(message);
-});
+// //middleware to handel error
+// app.use((err, req, res, next) => {
+//   let { message = "something went wrong ie default meaage", status = 500 } =
+//     err;
+//   res.render("./listings/error.ejs", { message });
+//   // res.status(status).send(message);
+// });
 
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");

@@ -1,4 +1,4 @@
-//this initially adds data which exists in data.js 
+//this initially adds data which exists in data.js
 //ie it is adding data to Listing which is a model we always add data to model schema is just a bluew print
 // listsing.js inside models is creating a model not a schama
 // model is where the data is store. data is not stored in array its stored in model so we first insert inital data to it using index.js
@@ -20,11 +20,14 @@ async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
 
-async function adding() {
+const InitDB = async () => {
   await Listing.deleteMany({});
-  await Listing.insertMany(initdata.data);
+  const updateData = initdata.data.map((obj) => ({
+    ...obj,
+    owner: "67a37f1a31ce6a33fbd14254", // user id
+  }));
+  await Listing.insertMany(updateData);
   console.log("initial data inserted");
-}
+};
 
-adding();
-
+InitDB();

@@ -23,7 +23,6 @@ router.post("/signup", async (req, res) => {
     let { username, email, password } = req.body;
     const newUser = new User({ email, username });
     const registeredUser = await User.register(newUser, password);
-    console.log(registeredUser);
     res.redirect("/listings");
   } catch (e) {
     req.flash("error", "username or email already exists");
@@ -44,7 +43,6 @@ router.post(
   }),
   async (req, res) => {
     req.flash("success", "welcome to wandelust");
-    console.log("Logged-in User:", req.user);
     if (res.locals.redirectUrl) {
       //when you go directly to home page and login the is loggedin middle ware is not triggerred and die to which the next middle ware is also not triggered
       res.redirect(res.locals.redirectUrl);
