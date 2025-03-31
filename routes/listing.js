@@ -85,7 +85,9 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate("owner");
+    const listing = await Listing.findById(id)
+      .populate("owner")
+      .populate("review");
     if (!listing) {
       req.flash("error", "listings you want to acces doesnt exist");
       res.redirect("/listings");
@@ -136,5 +138,18 @@ router.post("/:id/review", async (req, res) => {
 
   res.redirect(`/listings/${req.params.id}`);
 });
+
+router.delete(
+  "/:id/review/:idreview",
+  wrapAsync(async (req, res) => {
+    let { id, idreview } = req.params;
+
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: idreview } }); // understand thsi
+    await Review.findByIdAndDelete(idreview);
+
+    req.flash("success", "Review deleted successfully!");
+    res.redirect(`/listings/${id}`);
+  })
+);
 
 module.exports = router;

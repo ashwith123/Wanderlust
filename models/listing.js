@@ -20,7 +20,7 @@ const listingSchema = new Schema({
   review: [
     {
       type: Schema.Types.ObjectId, // gives unique id for each review
-      ref: "review",
+      ref: "Review",
     },
   ],
 
