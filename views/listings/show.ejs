@@ -96,7 +96,7 @@
             <div class="card-title">Review</div>
             <div class="card-text"><%=review.comment%></div>
             <div class="card-text">Rating: <%=review.rating%> stars</div>
-            <%if(listing.owner.user==currUser){%>
+            <%if(listing.owner.username==currUser){%>
             <div class="mb-2">
               <form
                 action="/listings/<%= listing._id %>/review/<%=review._id%>?_method=DELETE"
