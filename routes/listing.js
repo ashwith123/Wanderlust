@@ -72,11 +72,10 @@ router.put(
     };
 
     let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    await Listing.findByIdAndUpdate(id, { ...listingData });
     req.flash("success", "new listings created");
 
     res.redirect(`/listings/${id}`);
-    console.log(req.body.listing);
   })
 );
 
@@ -92,7 +91,6 @@ router.get(
       req.flash("error", "listings you want to acces doesnt exist");
       res.redirect("/listings");
     }
-    console.log(listing);
     res.render("../views/listings/show.ejs", { listing });
   })
 );
