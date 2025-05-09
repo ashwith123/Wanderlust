@@ -6,19 +6,19 @@ const wrapAsyn = require("../utils/wrapAsyn");
 
 //reviews
 
-router.post("/listings/<%=listing._id%>/review", async (req, res) => {
+router.post("/listings/:id/review", async (req, res) => {
   let listing = await Listing.findById(req.params.id);
   let newReview = new Review(req.body.review);
-
-  Listing.review.push(newReview);
-
   await newReview.save(); //cr
+
+  listing.review.push(newReview._id);
+
   await listing.save();
 });
 
 //delete review
 router.delete(
-  "/listings/:id/reviews/:reviewId",
+  "/listings/:id/review/:reviewId",
   wrapAsyn(async (req, res) => {
     let { id, reviewId } = req.params;
 
