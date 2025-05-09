@@ -1,3 +1,23 @@
+/* Add these styles to your existing CSS */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main content wrapper - this is crucial */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .navbar {
   height: 5rem;
   background-color: white;
@@ -52,8 +72,9 @@
   display: flex;
   justify-content: center;
   color: #222222;
-  flex-wrap: wrap;
   align-items: center;
+  flex-direction: column;
+  margin-top: auto; /* This helps push the footer down */
 }
 
 /*image styling*/

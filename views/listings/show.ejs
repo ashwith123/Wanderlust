@@ -23,7 +23,8 @@
             <li><%=listing.location%></li>
             <li><%=listing.country%></li>
           </ul>
-          <% if(listing.owner.username==currUser){%>
+          <% if (currUser && listing.owner && listing.owner._id.toString() ===
+          currUser._id.toString()) { %>
 
           <div class="row">
             <div class="col-auto">
@@ -96,7 +97,12 @@
             <div class="card-title">Review</div>
             <div class="card-text"><%=review.comment%></div>
             <div class="card-text">Rating: <%=review.rating%> stars</div>
-            <%if(listing.owner.username==currUser){%>
+            <% if (review.author) { %>
+            <p><%= review.author.username %></p>
+            <% } else { %>
+            <p>Author not found</p>
+            <% } %> <% if (review.author && review.author._id.toString() ==
+            currUser) { %>
             <div class="mb-2">
               <form
                 action="/listings/<%= listing._id %>/review/<%=review._id%>?_method=DELETE"

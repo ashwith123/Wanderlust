@@ -2,18 +2,21 @@ const express = require("express");
 const router = express.Router();
 const Review = require("../models/reviews");
 const Listing = require("../models/listing");
-const wrapAsyn = require("../utils/wrapAsyn");
+const wrapAsyn = require("../utils/wrapAsync");
 
 //reviews
 
 router.post("/listings/:id/review", async (req, res) => {
   let listing = await Listing.findById(req.params.id);
-  let newReview = new Review(req.body.review);
+  let newReview = new Review({ ...req.body.review, author: req.user._id });
+  newReview.author = req.user._id;
   await newReview.save(); //cr
 
   listing.review.push(newReview._id);
 
   await listing.save();
+  req.flash("success", "Review added successfully");
+  res.redirect(`/listings/${listing._id}`);
 });
 
 //delete review

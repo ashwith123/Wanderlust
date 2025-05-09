@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
-const wrapAsyn = require("../utils/wrapAsyn");
+const wrapAsyn = require("../utils/wrapAsync");
 const session = require("express-session");
 const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware"); //this is middleware use to go to previus page after loggin
@@ -43,12 +43,8 @@ router.post(
   }),
   async (req, res) => {
     req.flash("success", "welcome to wandelust");
-    if (res.locals.redirectUrl) {
-      //when you go directly to home page and login the is loggedin middle ware is not triggerred and die to which the next middle ware is also not triggered
-      res.redirect(res.locals.redirectUrl);
-    } else {
-      res.redirect("/listings");
-    }
+
+    res.redirect("/listings");
   }
 );
 

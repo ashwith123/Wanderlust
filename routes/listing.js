@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Listing = require("../models/listing");
-const wrapAsync = require("../utils/wrapAsyn");
+const wrapAsync = require("../utils/wrapAsync");
 const expressError = require("../utils/expressError");
 const listingSchema = require("../schema");
 const Review = require("../models/reviews");
@@ -22,7 +22,7 @@ router.get("/new", isLoggedIn, (req, res) => {
 });
 
 //CREATE ROUT
-router.post("/", isLoggedIn, async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     let result = listingSchema.validate(req.body); //joi for server side validation
     if (result.error) {
@@ -86,7 +86,9 @@ router.get(
     let { id } = req.params;
     const listing = await Listing.findById(id)
       .populate("owner")
-      .populate("review");
+      .populate("review")
+      .populate({ path: "review", populate: { path: "author" } });
+
     if (!listing) {
       req.flash("error", "listings you want to acces doesnt exist");
       res.redirect("/listings");
@@ -121,7 +123,7 @@ router.delete(
 );
 
 //reviews
-router.post("/:id/review", async (req, res) => {
+router.post("/:id/review", isLoggedIn, async (req, res) => {
   let listing = await Listing.findById(req.params.id);
   // console.log("Listing found:", listing);
 

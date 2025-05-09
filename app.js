@@ -8,6 +8,7 @@ const ejsmate = require("ejs-mate");
 const flash = require("connect-flash");
 const sessions = require("express-session");
 const passport = require("passport");
+const LocalStrategy = require("passport-local");
 
 // Importing models, routes, utilities
 const Listing = require("./models/listing");
@@ -16,7 +17,7 @@ const userRouter = require("./routes/user");
 const listingRouter = require("./routes/listing");
 const reviewRouter = require("./routes/reviews");
 const expressError = require("./utils/expressError");
-const wrapAsync = require("./utils/wrapAsyn");
+const wrapAsync = require("./utils/wrapAsync");
 const User = require("./models/user");
 
 app.set("view engine", "ejs");
@@ -39,6 +40,7 @@ const sessionOptions = {
 };
 
 app.use(sessions(sessionOptions));
+passport.use(new LocalStrategy(User.authenticate()));
 
 // Passport initialization (Fix: Ensure this order)
 app.use(passport.initialize());
@@ -55,8 +57,6 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user; // this is storing if user is logged in or not which is being used in navbar logic
-  console.log("Session Data:", req.session); // Debug log for session
-  console.log("Authenticated User:", req.user); // Debug log for user
   next();
 });
 
