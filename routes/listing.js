@@ -84,15 +84,23 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
+
+    // Populate owner and reviews with their respective authors
     const listing = await Listing.findById(id)
-      .populate("owner")
-      .populate("review")
-      .populate({ path: "review", populate: { path: "author" } });
+      .populate("owner") // Populate the owner field
+      .populate({
+        path: "review", // Populate reviews
+        populate: {
+          path: "author", // Populate the author field inside each review
+        },
+      });
 
     if (!listing) {
-      req.flash("error", "listings you want to acces doesnt exist");
-      res.redirect("/listings");
+      req.flash("error", "The listing you're looking for does not exist");
+      return res.redirect("/listings");
     }
+
+    console.log("Listing reviews:", listing.review); // For debugging
     res.render("../views/listings/show.ejs", { listing });
   })
 );
@@ -119,36 +127,6 @@ router.delete(
       console.error("Error deleting listing:", error);
       res.status(500).send("Server error");
     }
-  })
-);
-
-//reviews
-router.post("/:id/review", isLoggedIn, async (req, res) => {
-  let listing = await Listing.findById(req.params.id);
-  // console.log("Listing found:", listing);
-
-  let review = new Review(req.body.review);
-  // console.log("New review created:", review);
-
-  listing.review.push(review);
-  // console.log("Review pushed to listing:", listing);
-
-  await review.save();
-  await listing.save();
-
-  res.redirect(`/listings/${req.params.id}`);
-});
-
-router.delete(
-  "/:id/review/:idreview",
-  wrapAsync(async (req, res) => {
-    let { id, idreview } = req.params;
-
-    await Listing.findByIdAndUpdate(id, { $pull: { reviews: idreview } }); // understand thsi
-    await Review.findByIdAndDelete(idreview);
-
-    req.flash("success", "Review deleted successfully!");
-    res.redirect(`/listings/${id}`);
   })
 );
 

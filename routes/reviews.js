@@ -1,12 +1,12 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const Review = require("../models/reviews");
 const Listing = require("../models/listing");
 const wrapAsyn = require("../utils/wrapAsync");
 
 //reviews
 
-router.post("/listings/:id/review", async (req, res) => {
+router.post("/", async (req, res) => {
   let listing = await Listing.findById(req.params.id);
   let newReview = new Review({ ...req.body.review, author: req.user._id });
   newReview.author = req.user._id;
@@ -21,7 +21,7 @@ router.post("/listings/:id/review", async (req, res) => {
 
 //delete review
 router.delete(
-  "/listings/:id/review/:reviewId",
+  "/:reviewId",
   wrapAsyn(async (req, res) => {
     let { id, reviewId } = req.params;
 

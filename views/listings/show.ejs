@@ -23,8 +23,8 @@
             <li><%=listing.location%></li>
             <li><%=listing.country%></li>
           </ul>
-          <% if (currUser && listing.owner && listing.owner._id.toString() ===
-          currUser._id.toString()) { %>
+          <% if (currUser && review && review.author && review.author._id &&
+          review.author._id.toString() === currUser._id.toString()) { %>
 
           <div class="row">
             <div class="col-auto">
