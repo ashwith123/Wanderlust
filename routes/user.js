@@ -20,12 +20,21 @@ router.get("/signup", (req, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
+    console.log("BODY:", req.body);
+
     let { username, email, password } = req.body;
     const newUser = new User({ email, username });
     const registeredUser = await User.register(newUser, password);
-    res.redirect("/listings");
+    console.log(registeredUser);
+
+    req.login(registeredUser, (err) => {
+      if (err) return next(err);
+      req.flash("success", "Welcome to Wanderlust!");
+      res.redirect("/listings");
+    });
   } catch (e) {
     req.flash("error", "username or email already exists");
+    console.log(e);
     res.redirect("/signup");
   }
 });
@@ -55,7 +64,7 @@ router.get("/logout", (req, res, next) => {
       return next(err);
     }
     req.flash("success", "you have successfully logged out now");
-    res.redirect("/listings");
+    res.redirect("/login");
   });
 });
 

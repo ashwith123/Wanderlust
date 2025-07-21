@@ -15,7 +15,7 @@
         <div class="card-body">
           <ul>
             <i
-              >Owned By: <%= listing.owner ? listing.owner.username :
+              ><b>Owned By</b>: <%= listing.owner ? listing.owner.username :
               "UnknownOwner" %></i
             >
             <li><%=listing.description%></li>
@@ -23,16 +23,14 @@
             <li><%=listing.location%></li>
             <li><%=listing.country%></li>
           </ul>
-          <% if (currUser && review && review.author && review.author._id &&
-          review.author._id.toString() === currUser._id.toString()) { %>
-
+          <% if (currUser && listing.owner && listing.owner._id.toString() ===
+          currUser._id.toString()) { %>
           <div class="row">
             <div class="col-auto">
-              <a href="/listings/<%=listing._id%>/edit"
-                ><button class="btn btn-danger">Edit</button></a
-              >
+              <a href="/listings/<%= listing._id %>/edit">
+                <button class="btn btn-danger">Edit</button>
+              </a>
             </div>
-
             <div class="col-auto">
               <form
                 action="/listings/<%= listing._id %>?_method=DELETE"
@@ -42,10 +40,17 @@
               </form>
             </div>
           </div>
-          <%}%>
+          <% } %>
         </div>
       </div>
     </div>
+  </div>
+  <hr />
+  <div class="mapclass col col-8 offset-2">
+    <div style="display: block">
+      <h3>Where you will be</h3>
+    </div>
+    <div id="map" style="display: block"></div>
   </div>
   <hr />
   <div class="row">
@@ -87,22 +92,27 @@
 
       <hr />
 
-      <h1>All Reviews</h1>
+      <h1><b>All Reviews</b></h1>
       <div class="row">
-        <% if(listing.review.length === 0) { %>
+        <% if(listing.reviews.length === 0) { %>
         <p>No reviews yet. Be the first to add one!</p>
-        <% } else { %> <% for(let review of listing.review) { %>
+        <% } else { %> <% for(let review of listing.reviews) { %>
         <div class="card review-card col-5 ms-2 mb-2">
-          <div class="card-body">
-            <div class="card-title">Review</div>
-            <div class="card-text"><%=review.comment%></div>
-            <div class="card-text">Rating: <%=review.rating%> stars</div>
+          <div class="card-body" style="overflow: scroll">
+            <div class="card-text">
+              <b> Rating:</b> <%=review.rating%> stars
+            </div>
+            <div class="card-title" style="display: inline">
+              <b>comment:</b>R
+            </div>
+            <div class="card-text" style="display: inline">
+              <%=review.comment%>
+            </div>
+
             <% if (review.author) { %>
-            <p><%= review.author.username %></p>
-            <% } else { %>
-            <p>Author not found</p>
+            <p><b>Reviewd by</b><%= review.author.username %></p>
             <% } %> <% if (review.author && review.author._id.toString() ==
-            currUser) { %>
+            currUser._id.toString()) { %>
             <div class="mb-2">
               <form
                 action="/listings/<%= listing._id %>/review/<%=review._id%>?_method=DELETE"
@@ -118,4 +128,24 @@
       </div>
     </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get coordinates from MongoDB
+      const lat = <%- JSON.stringify(listing.latitude || 19.0760) %>;
+      const lng = <%- JSON.stringify(listing.longitude || 72.8777) %>;
+
+      // Initialize map
+      const map = L.map('map').setView([lat, lng], 13);
+
+      // Add map tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Add marker
+      L.marker([lat, lng]).addTo(map)
+        .bindPopup('<b><%- listing.title %></b><br><%- listing.location %>, <%- listing.country %>')
+        .openPopup();
+    });
+  </script>
 </body>

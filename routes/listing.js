@@ -10,7 +10,10 @@ const { isLoggedIn } = require("../middleware");
 //index rout
 router.get(
   "/",
+  isLoggedIn,
+
   wrapAsync(async (req, res) => {
+    console.log("user is logged in" + isLoggedIn);
     const allListings = await Listing.find({});
     res.render("../views/listings/index.ejs", { allListings });
   })
@@ -22,7 +25,7 @@ router.get("/new", isLoggedIn, (req, res) => {
 });
 
 //CREATE ROUT
-router.post("/", async (req, res, next) => {
+router.post("/new", isLoggedIn, async (req, res, next) => {
   try {
     let result = listingSchema.validate(req.body); //joi for server side validation
     if (result.error) {
@@ -57,18 +60,14 @@ router.put(
   "/:id",
   isLoggedIn,
   wrapAsync(async (req, res, next) => {
-    const existingListing = await Listing.findById(req.params.id);
-
+    console.log("new data=", req.body);
     const listingData = {
-      title: req.body.title,
-      description: req.body.description,
-      image: {
-        url: req.body.image, // This assumes you're getting the image URL directly from the form input
-        filename: existingListing.image.filename, // Retain the existing filename from the database
-      },
-      price: req.body.price,
-      country: req.body.country,
-      location: req.body.location,
+      title: req.body.listing.title,
+      description: req.body.listing.description,
+      image: req.body.listing.image, // This assumes you're getting the image URL directly from the form input
+      price: req.body.listing.price,
+      country: req.body.listing.country,
+      location: req.body.listing.location,
     };
 
     let { id } = req.params;
@@ -89,7 +88,7 @@ router.get(
     const listing = await Listing.findById(id)
       .populate("owner") // Populate the owner field
       .populate({
-        path: "review", // Populate reviews
+        path: "reviews", // Populate reviews
         populate: {
           path: "author", // Populate the author field inside each review
         },
@@ -100,7 +99,7 @@ router.get(
       return res.redirect("/listings");
     }
 
-    console.log("Listing reviews:", listing.review); // For debugging
+    console.log("Listing reviews:", listing.reviews); // For debugging
     res.render("../views/listings/show.ejs", { listing });
   })
 );

@@ -118,3 +118,8 @@ a {
 .show-img {
   width: 18rem;
 }
+
+#map {
+  height: 350px;
+  width: 80%;
+}

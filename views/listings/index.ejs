@@ -1,11 +1,11 @@
 <% layout("layouts/boilerplate") %>
 <body>
-  <h1>BOOKmyhotel</h1>
-  <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1">
+  <h1>Boomyhotel</h1>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
     <% for (let listing of allListings) { %>
     <ul>
       <a href="/listings/<%= listing._id %>"
-        ><div class="listing-card col" style="width: 18rem">
+        ><div class="listing-card col ms-2" style="width: 18rem">
           <img
             src="<%= listing.image ? listing.image.url : 'https://images.unsplash.com/photo-1525596662741-e94ff9f26de1?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'%>"
             class="card-img-top"

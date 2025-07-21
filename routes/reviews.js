@@ -7,16 +7,21 @@ const wrapAsyn = require("../utils/wrapAsync");
 //reviews
 
 router.post("/", async (req, res) => {
-  let listing = await Listing.findById(req.params.id);
-  let newReview = new Review({ ...req.body.review, author: req.user._id });
-  newReview.author = req.user._id;
-  await newReview.save(); //cr
+  try {
+    let listing = await Listing.findById(req.params.id);
+    let newReview = new Review({ ...req.body.review, author: req.user._id });
+    newReview.author = req.user._id;
+    await newReview.save(); //cr
 
-  listing.review.push(newReview._id);
+    listing.reviews.push(newReview._id);
 
-  await listing.save();
-  req.flash("success", "Review added successfully");
-  res.redirect(`/listings/${listing._id}`);
+    await listing.save();
+    req.flash("success", "Review added successfully");
+    res.redirect(`/listings/${listing._id}`);
+  } catch (e) {
+    console.log("error" + e);
+    next(e);
+  }
 });
 
 //delete review

@@ -4,13 +4,9 @@
   <div class="row mt-3">
     <h1 class="col-6">Sign up on Wanderlust</h1>
     <div class="col-6 offset-3">
-      <form action="/signup" method="post">
+      <form action="/signup" method="post" novalidate>
         <div class="mb-3">
-          <label
-            for="title"
-            class="form-label"
-            class="needs-validation"
-            novalidate
+          <label for="title" class="form-label" class="needs-validation"
             >username</label
           >
           <input
@@ -58,7 +54,7 @@
           />
           <div class="valid-feedback">password is strong</div>
         </div>
-        <button class="btn btn-success" type="submit">SiguP</button>
+        <button class="btn btn-success" type="submit">signup</button>
       </form>
       <br />
       <a href="/login">Already have an account ?</a>

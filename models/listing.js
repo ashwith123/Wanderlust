@@ -1,3 +1,4 @@
+const { number } = require("joi");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -10,14 +11,20 @@ const listingSchema = new Schema({
   },
   description: String,
   image: {
-    filename: String,
     url: String,
   },
   price: Number,
   location: String,
+  latitude: {
+    type: Number,
+    required: true,
+  },
+  longitude: {
+    type: Number,
+    required: true,
+  },
   country: String,
-
-  review: [
+  reviews: [
     {
       type: Schema.Types.ObjectId, // gives unique id for each review
       ref: "Review",

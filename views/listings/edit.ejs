@@ -19,16 +19,17 @@
 
         <textarea
           name="listing[description]"
-          value="<%=listing.description%> "
           class="form-control"
           id="description"
-        ></textarea>
+        >
+<%= listing.description %></textarea
+        >
         <br />
         <label for="image">Edit the image</label>
 
         <input
           name="listing[image][url]"
-          value="<%=listing.image.url%> "
+          value="<%=listing.image.url%>"
           type="text"
           class="form-control"
           id="image"
@@ -41,7 +42,7 @@
 
             <input
               name="listing[price]"
-              value="<%=listing.price%> "
+              value="<%=listing.price%>"
               type="number"
               class="form-control"
               id="price"
@@ -61,7 +62,7 @@
           </div>
           <br />
         </div>
-        <label for="location">Edit the description</label>
+        <label for="location">Edit the location</label>
 
         <input
           name="listing[location]"
@@ -69,10 +70,9 @@
           type="text"
           class="form-control"
           id="location"
-        /><br />
-        <br />
+        />
         <button
-          class="btn btn-dark add-btn"
+          class="btn btn-dark add-btn mb-3 mt-2"
           style="background-color: red; border: none"
         >
           edit
