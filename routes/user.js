@@ -33,7 +33,15 @@ router.post("/signup", async (req, res) => {
       res.redirect("/listings");
     });
   } catch (e) {
-    req.flash("error", "username or email already exists");
+    let errorMessage = "An error occurred during signup";
+    if (e.code === 11000) {
+      errorMessage = "Username or email already exists";
+    } else if (e.name === "ValidationError") {
+      errorMessage = "Invalid input data";
+    } else {
+      console.log(e);
+    }
+    req.flash("error", errorMessage);
     console.log(e);
     res.redirect("/signup");
   }
