@@ -70,15 +70,13 @@ main()
     console.log(err);
   });
 //connecting mongoose
-
+app.get("/", (req, res) => {
+  res.redirect("/login");
+});
 //routes
 app.use("/", userRouter);
 app.use("/listings", listingRouter);
 app.use("/listings/:id/review", reviewRouter);
-
-app.get("/", (req, res) => {
-  res.send("hi this is projects Root");
-});
 
 app.listen(7070, () => {
   console.log("server is listening");
