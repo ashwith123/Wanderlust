@@ -1,4 +1,7 @@
 const express = require("express");
+const multer = require("multer");
+const { storage } = require("../lib/cloudinary");
+const upload = multer({ storage });
 const router = express.Router();
 const Listing = require("../models/listing");
 const wrapAsync = require("../utils/wrapAsync");
@@ -13,8 +16,8 @@ router.get(
   isLoggedIn,
 
   wrapAsync(async (req, res) => {
-    console.log("user is logged in" + isLoggedIn);
     const allListings = await Listing.find({});
+    console.log("all lisitngs sent to index page is ", allListings);
     res.render("../views/listings/index.ejs", { allListings });
   })
 );
@@ -25,23 +28,43 @@ router.get("/new", isLoggedIn, (req, res) => {
 });
 
 //CREATE ROUT
-router.post("/new", isLoggedIn, async (req, res, next) => {
-  try {
-    let result = listingSchema.validate(req.body); //joi for server side validation
-    if (result.error) {
-      //if error exist in server side
-      throw new expressError(404, result.error);
+router.post(
+  "/new",
+  isLoggedIn,
+  upload.single("listing[image]"),
+  async (req, res, next) => {
+    try {
+      const newlist = { ...req.body.listing };
+
+      if (req.file) {
+        newlist.image = {
+          url: req.file.path,
+          filename: req.file.filename,
+        };
+      } else {
+        // If not uploaded, DELETE the image key
+        delete newlist.image;
+      }
+
+      const result = listingSchema.validate({ listing: newlist });
+      if (result.error) {
+        console.log(result.error);
+        throw new expressError(400, result.error.details[0].message);
+      }
+
+      const newlisting = new Listing(newlist);
+      newlisting.owner = req.user._id;
+
+      await newlisting.save();
+      const find = Listing.findById();
+      console.log(newlist);
+      req.flash("success", "New listing created!");
+      res.redirect("/listings");
+    } catch (e) {
+      next(e);
     }
-    let listing = req.body.listing;
-    const newlisting = new Listing(listing);
-    newlisting.owner = req.user._id; //adds username and mail to owner
-    await newlisting.save();
-    req.flash("success", "new listings created");
-    res.redirect("/listings");
-  } catch (e) {
-    console.log(e);
   }
-});
+);
 
 //EDIT ROUT
 router.get(
@@ -111,17 +134,27 @@ router.delete(
   wrapAsync(async (req, res) => {
     try {
       const { id } = req.params;
-      const deletedListing = await Listing.findByIdAndDelete(id);
+      const listing = await Listing.findById(id);
 
-      if (!deletedListing) {
-        req.flash("error", "listing not found");
-        res.redirect("/listings");
+      if (!listing) {
+        req.flash("error", "Listing not found");
+        return res.redirect("/listings");
       }
-
-      console.log(`Deleted listing: ${deletedListing}`);
-      req.flash("success", " listings deleted successfully");
-
-      res.redirect("/listings"); // Ensure this path exists in your router
+      if (listing.image && listing.image.filename) {
+        try {
+          await cloudinary.uploader.destroy(listing.image.filename); // delete from Cloudinar
+          console.log(
+            `Deleted image from Cloudinary: ${listing.image.filename}`
+          );
+        } catch (cloudErr) {
+          console.error("Cloudinary delete failed:", cloudErr);
+          req.flash("error", "Image deletion failed");
+          return res.redirect("/listings");
+        }
+      }
+      await Listing.findByIdAndDelete(id);
+      req.flash("success", "Listing and image deleted successfully");
+      res.redirect("/listings");
     } catch (error) {
       console.error("Error deleting listing:", error);
       res.status(500).send("Server error");

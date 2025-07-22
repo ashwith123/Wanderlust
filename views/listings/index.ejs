@@ -1,15 +1,68 @@
 <% layout("layouts/boilerplate") %>
-<body>
-  <h1>Boomyhotel</h1>
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
+<body >
+    <div id="filters">
+     <div class="filter">
+      <div><i class="fa-solid fa-fire"></i></div>
+      <p>Trending</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-bed"></i></div>
+      <p>Rooms</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-mountain-city"></i></div>
+      <p>Iconic City</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-mountain-sun"></i></div>
+      <p>Mountains</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-brands fa-fort-awesome"></i></div>
+      <p>Castles</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-regular fa-snowflake"></i></div>
+      <p>Arctic</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-tents"></i></div>
+      <p>Camping</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-wheat-awn"></i></div>
+      <p>Farms</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-person-swimming"></i></div>
+      <p>Amazing Pool</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-umbrella-beach"></i></div>
+      <p>Beach</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-sailboat"></i></i></div>
+      <p>Island</p> 
+     </div>
+     <div class="filter">
+      <div><i class="fa-solid fa-plane-departure"></i></i></i></div>
+      <p>Foreign Trip</p> 
+     </div>
+     
+  </div>
+
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
     <% for (let listing of allListings) { %>
     <ul>
       <a href="/listings/<%= listing._id %>"
-        ><div class="listing-card col ms-2" style="width: 18rem">
+        ><div class="listing-Icard col ms-2">
           <img
             src="<%= listing.image ? listing.image.url : 'https://images.unsplash.com/photo-1525596662741-e94ff9f26de1?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'%>"
             class="card-img-top"
             alt="<%= listing.title %> image not found"
+              onerror="this.onerror=null;this.src='https://res.cloudinary.com/dzfbgnkd8/image/upload/v1753116111/Listings/levv55sniaizmgvcaxis.png';"
+
           />
           <div class="card-body">
             <p class="card-text">

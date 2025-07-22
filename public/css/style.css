@@ -3,9 +3,8 @@ html,
 body {
   height: 100%;
   margin: 0;
-}
+  font-family: "Plus Jakarta Sans", sans-serif !important;
 
-body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -15,12 +14,22 @@ body {
 .content-wrapper {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .navbar {
-  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  height: 4rem !important;
   background-color: white;
+}
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3rem !important;
 }
 
 .compass {
@@ -83,11 +92,25 @@ a {
   text-decoration: none !important;
 }
 
+.listing-Icard {
+  border: none !important;
+  margin-bottom: 2rem;
+  text-decoration: none !important;
+  color: #222222 !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .listing-card {
   border: none !important;
   margin-bottom: 2rem;
   text-decoration: none !important;
   color: #222222 !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.listing-Icard:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .card-img-top {
@@ -95,7 +118,10 @@ a {
   height: 20rem !important;
   object-fit: cover !important;
 }
-
+.card-img-overlay:hover {
+  opacity: 0.2;
+  background-color: white;
+}
 .card-body {
   padding: 0% !important;
 }
@@ -122,4 +148,76 @@ a {
 #map {
   height: 350px;
   width: 80%;
+}
+
+/* filter styling */
+#filters {
+  display: flex;
+  flex-wrap: wrap;
+}
+.filter {
+  margin-top: 0.5rem;
+  height: 4rem;
+  width: 4rem;
+  text-align: center;
+  margin-right: 2rem;
+  opacity: 0.7;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter:hover {
+  opacity: 1;
+  cursor: pointer;
+  transform: scale(1.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.filter p {
+  font-size: 0.8rem;
+}
+
+#addNewListing {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 3rem;
+  width: 15rem;
+  border-radius: 2rem;
+  color: white !important;
+  background-color: #fe424d;
+  cursor: pointer;
+  padding: 0%;
+  margin-top: 0.5rem;
+}
+
+.navbar-nav .logo {
+  color: #fe424d !important;
+  font-weight: 1000 !important;
+  font-size: 30px !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
+}
+
+#icon {
+  color: #fe424d !important;
+  font-weight: 1000 !important;
+  font-size: 30px !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
+}
+
+.show {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+}
+
+.nav-link {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+}
+
+#rating {
+  padding: 0% !important;
 }

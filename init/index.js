@@ -4,6 +4,7 @@
 // model is where the data is store. data is not stored in array its stored in model so we first insert inital data to it using index.js
 
 //this file is run once nodemon index.js so all data is added is model
+require("dotenv").config({ path: "../.env" });
 
 const mongoose = require("mongoose");
 const Listing = require("../models/listing");
@@ -17,17 +18,18 @@ main()
   });
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+  await mongoose.connect(process.env.MONGODB_URI);
 }
 
 const InitDB = async () => {
   await Listing.deleteMany({});
   const updateData = initdata.data.map((obj) => ({
     ...obj,
-    owner: "67ea7b457bcf3ac46d18f838", // user id
+    owner: "687fa3ca64c1b947756150b7", // user id
   }));
   await Listing.insertMany(updateData);
-  console.log("initial data inserted");
+  const insertedData = await Listing.find({});
+  console.log("Inserted data:", insertedData);
 };
 
 InitDB();

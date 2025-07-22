@@ -1,16 +1,17 @@
 <% layout("layouts/boilerplate") %>
 
 <body>
-  <div class="row mt-3">
+  <div class="row mt-3 show">
     <div class="col col-8 offset-2">
       <h1><%=listing.title%></h1>
     </div>
     <div class="col col-8 offset-2">
       <div class="listing-card">
         <img
-          src="<%=listing.image.url%>"
+          src="<%=listing.image.url%>?:"
           class="card-img-top"
           alt="image not found"
+          onerror="this.onerror=null;this.src='https://res.cloudinary.com/dzfbgnkd8/image/upload/v1753116111/Listings/levv55sniaizmgvcaxis.png';"
         />
         <div class="card-body">
           <ul>
@@ -62,17 +63,55 @@
         class="needs-validation"
         novalidate
       >
-        <div>
-          <label for="rating"> Give rating</label>
-          <input
-            type="range"
-            id="rating"
-            min="0"
-            max="5"
-            name="review[rating]"
-          />
+        <div id="rating">
+          <label for="rating" class="form-label"> Give rating</label>
+          <fieldset class="starability-coinFlip">
+            <input
+              type="radio"
+              id="no-rate"
+              class="input-no-rate"
+              name="review[rating]"
+              value="1"
+              checked
+              aria-label="No rating."
+            />
+            <input
+              type="radio"
+              id="first-rate1"
+              name="review[rating]"
+              value="1"
+            />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input
+              type="radio"
+              id="first-rate2"
+              name="review[rating]"
+              value="2"
+            />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input
+              type="radio"
+              id="first-rate3"
+              name="review[rating]"
+              value="3"
+            />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input
+              type="radio"
+              id="first-rate4"
+              name="review[rating]"
+              value="4"
+            />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input
+              type="radio"
+              id="first-rate5"
+              name="review[rating]"
+              value="5"
+            />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
         </div>
-        <br />
         <div>
           <label for="comment">Enter comment</label><br />
           <textarea
@@ -98,9 +137,12 @@
         <p>No reviews yet. Be the first to add one!</p>
         <% } else { %> <% for(let review of listing.reviews) { %>
         <div class="card review-card col-5 ms-2 mb-2">
-          <div class="card-body" style="overflow: scroll">
+          <div class="card-body">
             <div class="card-text">
-              <b> Rating:</b> <%=review.rating%> stars
+              <p
+                class="starability-result card-text"
+                data-rating="<%= review.rating %>"
+              ></p>
             </div>
             <div class="card-title" style="display: inline">
               <b>comment:</b>R

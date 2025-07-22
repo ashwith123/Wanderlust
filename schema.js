@@ -10,8 +10,9 @@ const listingSchema = Joi.object({
     latitude: Joi.number().min(-90).max(90).required(),
     longitude: Joi.number().min(-180).max(180).required(),
     image: Joi.object({
-      url: Joi.string().required(),
-    }),
+      url: Joi.string().uri().required(),
+      filename: Joi.string().required(),
+    }).required(),
   }).required(),
 });
 
